@@ -56,7 +56,7 @@ namespace EnhancedGodMode
                 {
                     god = true;
                     Repo_Lib.SetGodMode(true);
-                    MelonLogger.Msg("god mode enabled")
+                    MelonLogger.Msg("god mode enabled");
                 }
                 else
                 {
