@@ -17,11 +17,13 @@ namespace EnhancedGodMode
         private readonly Library Repo_Lib = new Library();
         private bool hasUpgraded = false;
         private bool god = false;
+        private bool durability = false;
 
         public override void OnUpdate()
         {
             if (!Repo_Lib.IsInGame()) return;
             PlayerController playerController = Repo_Lib.GetPlayerController();
+
             if (Repo_Lib.IsSprinting(playerController))
             {
                 Repo_Lib.SetSprintEnergyDrain(playerController, 0f);
@@ -69,6 +71,29 @@ namespace EnhancedGodMode
             {
                 PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
                 Repo_Lib.HealPlayerMax(playerAvatar.gameObject);
+            }
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
+                List<PlayerAvatar> values = Repo_Lib.GetAllPlayers();
+                foreach (PlayerAvatar playerAv in values)
+                {
+                    continue;   
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                if (!durability)
+                {
+                    Repo_Lib.DisableItemsDurability(true);
+                    MelonLogger.Msg("Item Durability: Disabled");
+                    durability = true;
+                } else
+                {
+                    Repo_Lib.DisableItemsDurability(false);
+                    MelonLogger.Msg("Item Durability: Enabled");
+                    durability = false;
+                }
             }
         }
     }
