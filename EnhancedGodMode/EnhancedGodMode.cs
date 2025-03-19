@@ -20,6 +20,7 @@ namespace EnhancedGodMode
         private bool god = false;
         private bool isNoClip = false;
         private float flySpeed = 10f;
+        private bool durability = false;
 
         public override void OnUpdate()
         {
@@ -48,10 +49,12 @@ namespace EnhancedGodMode
                     Repo_Lib.UpgradePlayerSprintSpeed();
                 }
             }
+
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Repo_Lib.SpawnItem(AssetManager.instance.enemyValuableBig);
             }
+
             if (Input.GetKeyDown(KeyCode.F1))
             {
                 if (!god)
@@ -67,25 +70,29 @@ namespace EnhancedGodMode
                     MelonLogger.Msg("god mode disabled");
                 }
             }
+
             if (Input.GetKeyDown(KeyCode.F3))
             {
                 PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
                 Repo_Lib.HealPlayerMax(playerAvatar.gameObject);
             }
-            //if (Input.GetKeyDown(KeyCode.F5))
-            //{
-            //    PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
-            //    List<PlayerAvatar> values = Repo_Lib.GetAllPlayers();
-            //    MelonLogger.Msg(values.ToString());
-            //    foreach (PlayerAvatar playerAv in values)
-            //    {
-            //        MelonLogger.Msg(playerAv.gameObject.name);
-            //        playerAv.gameObject.transform.position = playerAvatar.gameObject.transform.position;
-            //        MelonLogger.Msg(playerAv.gameObject.transform.position.ToString());
-            //        MelonLogger.Msg(playerAvatar.gameObject.transform.position.ToString());
-            //        MelonLogger.Msg(playerAv.transform.position.ToString());
-            //    }
-            //}
+
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                if (!durability)
+                {
+                    Repo_Lib.DisableItemsDurability(true);
+                    MelonLogger.Msg("Item Durability: Disabled");
+                    durability = true;
+                }
+                else
+                {
+                    Repo_Lib.DisableItemsDurability(false);
+                    MelonLogger.Msg("Item Durability: Enabled");
+                    durability = false;
+                }
+            }
+
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 ToggleNoClip(playerController);
