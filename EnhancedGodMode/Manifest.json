@@ -1,7 +1,7 @@
 {
   "name": "EnhancedGodMode",
-  "version_number": "1.0.0",
-  "website_url": "https://github.com/Andrewslayton/EnchancedGodMode",
+  "version_number": "1.0.1",
+  "website_url": "https://github.com/Andrewslayton/EnhancedGodMode",
   "description": "Upgrades strength,health,energy,jump,range 20 levels. Upgrades sprint speed, tumble launch 10 levels. Toggleable god mode with f1, spawns 7,000 value enemy orb with f2, and heal to full health with f3",
   "dependencies": [
     "Lillious_Networks-REPO_Mod_Library-1.0.55"
