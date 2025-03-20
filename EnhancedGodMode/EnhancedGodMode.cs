@@ -21,7 +21,6 @@ namespace EnhancedGodMode
         private bool isNoClip = false;
         private float flySpeed = 10f;
         private bool durability = false;
-
         public override void OnUpdate()
         {
             if (!Repo_Lib.IsInGame()) return;
@@ -93,6 +92,12 @@ namespace EnhancedGodMode
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.F7))
+            {
+                Repo_Lib.BuyAllItems();
+                MelonLogger.Msg("All Items bought!");
+            }
+
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 ToggleNoClip(playerController);
@@ -102,7 +107,6 @@ namespace EnhancedGodMode
                 FlyMovement(playerController);
             }
         }
-
         private void ToggleNoClip(PlayerController playerController)
         {
             isNoClip = !isNoClip;
@@ -135,17 +139,29 @@ namespace EnhancedGodMode
 
         private void FlyMovement(PlayerController playerController)
         {
+            Rigidbody rb = playerController.GetComponent<Rigidbody>();
+            if (rb != null )
+            {
+                rb.useGravity = false;
+                rb.velocity = Vector3.zero;
+            }
+            
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
+
             float upDown = 0f;
             if (Input.GetKey(KeyCode.Space))
                 upDown = 1f;
             if (Input.GetKey(KeyCode.LeftShift))
                 upDown = -1f;
+            
+            bool isMoving = horizontal != 0f || vertical != 0f || upDown != 0f;
 
-            Vector3 movement = (playerController.transform.right * horizontal) +
-                               (playerController.transform.forward * vertical) +
-                               (playerController.transform.up * upDown);
+            Vector3 movement = isMoving
+                ? (playerController.transform.right * horizontal) +
+                  (playerController.transform.forward * vertical) +
+                  (playerController.transform.up * upDown)
+                : Vector3.zero;
 
             playerController.transform.position += movement * flySpeed * Time.deltaTime;
         }
