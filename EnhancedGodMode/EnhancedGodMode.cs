@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem.UI;
 
 [assembly: MelonInfo(typeof(EnhancedGod), "EventRepo", "1.0", "semiwork")]
 [assembly: MelonGame("semiwork", "REPO")]
@@ -50,6 +49,7 @@ namespace EnhancedGodMode
                     Repo_Lib.UpgradePlayerSprintSpeed();
                 }
             }
+
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Repo_Lib.SpawnItem(AssetManager.instance.enemyValuableBig);
@@ -77,29 +77,6 @@ namespace EnhancedGodMode
                 Repo_Lib.HealPlayerMax(playerAvatar.gameObject);
             }
 
-
-            if(Input.GetKeyDown(KeyCode.F4))
-{
-                PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
-                List<PlayerAvatar> allPlayers = Repo_Lib.GetAllPlayers();
-
-                foreach (PlayerAvatar otherPlayer in allPlayers)
-                {
-                    // Skip yourself
-                    if (otherPlayer == playerAvatar)
-                        continue;
-
-                    // Get the PhotonView component from the other player's game object
-                    PhotonView otherPhotonView = otherPlayer.GetComponent<PhotonView>();
-                    if (otherPhotonView != null)
-                    {
-                        // Use the instance of PhotonView to call the RPC
-                        otherPhotonView.RPC("TeleportPlayer", RpcTarget.All, playerAvatar.transform.position);
-                    }
-                }
-            }
-
-
             if (Input.GetKeyDown(KeyCode.F5))
             {
                 if (!durability)
@@ -126,15 +103,6 @@ namespace EnhancedGodMode
             }
         }
 
-        [PunRPC]
-        public class PlayerTeleport : MonoBehaviourPun
-        {
-            [PunRPC]
-            public void TeleportPlayer(Vector3 targetPosition)
-            {
-                transform.position = targetPosition;
-            }
-        }
         private void ToggleNoClip(PlayerController playerController)
         {
             isNoClip = !isNoClip;
@@ -142,12 +110,12 @@ namespace EnhancedGodMode
             {
                 playerController.PlayerCollision.enabled = false;
                 playerController.CollisionController.enabled = false;
-                //playerController.CollisionController.gameObject.SetActive(false);
-                //playerController.PlayerCollision.gameObject.SetActive(false);
+                playerController.CollisionController.gameObject.SetActive(false);
+                playerController.PlayerCollision.gameObject.SetActive(false);
                 playerController.CollisionGrounded.enabled = false;
                 playerController.rb.isKinematic = true;
                 playerController.rb.useGravity = false;
-                //playerController.rb.detectCollisions = false;
+                playerController.rb.detectCollisions = false;
                 playerController.rb.velocity = Vector3.zero;
                 MelonLogger.Msg("NoClip enabled");
             }
@@ -169,7 +137,7 @@ namespace EnhancedGodMode
         {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
-            float upDown = 0.1f;
+            float upDown = 0f;
             if (Input.GetKey(KeyCode.Space))
                 upDown = 1f;
             if (Input.GetKey(KeyCode.LeftShift))
@@ -177,7 +145,7 @@ namespace EnhancedGodMode
 
             Vector3 movement = (playerController.transform.right * horizontal) +
                                (playerController.transform.forward * vertical) +
-                               (playerController.transform.up * upDown) ;
+                               (playerController.transform.up * upDown);
 
             playerController.transform.position += movement * flySpeed * Time.deltaTime;
         }
