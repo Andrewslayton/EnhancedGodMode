@@ -20,6 +20,7 @@ namespace EnhancedGodMode
         private bool god = false;
         private bool isNoClip = false;
         private float flySpeed = 10f;
+        private bool isTumble = false;
         private bool durability = false;
         private bool wasInGameLastFrame = false;
         public override void OnUpdate()
@@ -43,7 +44,7 @@ namespace EnhancedGodMode
                 return;
             }
 
-            Repo_Lib.GetPlayerCollision().enabled = false;
+            //Repo_Lib.GetPlayerCollision().enabled = false;
             if (Repo_Lib.IsSprinting(playerController))
             {
                 Repo_Lib.SetSprintEnergyDrain(playerController, 0f);
@@ -156,6 +157,24 @@ namespace EnhancedGodMode
                     MelonLogger.Msg("Item Durability: Enabled");
                     durability = false;
                 }
+            }
+
+            if(Input.GetKey(KeyCode.F7))
+            {
+                if (!isTumble)
+                {
+                    var t = Repo_Lib.GetPlayerAvatar().tumble;
+                    t.TumbleSet(true, true);
+                    PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
+                    playerAvatar.tumble.TumbleSet(true, true);
+                    isTumble = true;
+                }
+                else
+                {
+                    Repo_Lib.GetPlayerAvatar().tumble.TumbleSet(false, false);
+                    isTumble = false;
+                }
+
             }
 
         }
