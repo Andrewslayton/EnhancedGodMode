@@ -8,7 +8,7 @@ using System.Linq;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 
-[assembly: MelonInfo(typeof(EnhancedGod), "EventRepo", "1.0", "semiwork")]
+[assembly: MelonInfo(typeof(EnhancedGod), "EventRepo", "1.0", "Drew and Kel")]
 [assembly: MelonGame("semiwork", "REPO")]
 
 namespace EnhancedGodMode
@@ -25,6 +25,29 @@ namespace EnhancedGodMode
         {
             if (!Repo_Lib.IsInGame()) return;
             PlayerController playerController = Repo_Lib.GetPlayerController();
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                var pla  = Repo_Lib.GetAllPlayers();
+                for(int i = 0; i < pla.Count; i++)
+                {
+
+                    if (pla[i].GetComponent<PhotonView>().IsMine == true)
+                    {
+                        var t1 = Repo_Lib.GetPlayerController();
+                        MelonLogger.Msg("Player is mine");
+                        if (i != 0)
+                        {
+                            MelonLogger.Msg("Player moved to: " + pla[i - 1].transform.position);
+                            Repo_Lib.TeleportPlayer(t1, pla[i - 1].transform.position);
+                        }
+                        else
+                        {
+                            MelonLogger.Msg("Player moved to: " + pla[pla.Count - 1].transform.position);
+                            Repo_Lib.TeleportPlayer(t1, pla[pla.Count-1].transform.position);
+                        }
+                    }
+                }
+            }
             Repo_Lib.GetPlayerCollision().enabled = false;
             if (Repo_Lib.IsSprinting(playerController))
             {
@@ -49,7 +72,7 @@ namespace EnhancedGodMode
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
+            if (Input.GetKeyDown(KeyCode.F3))
             {
                 Repo_Lib.SpawnItem(AssetManager.instance.enemyValuableBig);
             }
@@ -70,13 +93,13 @@ namespace EnhancedGodMode
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F3))
+            if (Input.GetKeyDown(KeyCode.F5))
             {
                 PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
                 Repo_Lib.HealPlayerMax(playerAvatar.gameObject);
             }
 
-            if (Input.GetKeyDown(KeyCode.F5))
+            if (Input.GetKeyDown(KeyCode.F6))
             {
                 if (!durability)
                 {
@@ -92,13 +115,7 @@ namespace EnhancedGodMode
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F7))
-            {
-                Repo_Lib.BuyAllItems();
-                MelonLogger.Msg("All Items bought!");
-            }
-
-            if (Input.GetKeyDown(KeyCode.F6))
+            if (Input.GetKeyDown(KeyCode.F2))
             {
                 ToggleNoClip(playerController);
             }
@@ -136,7 +153,6 @@ namespace EnhancedGodMode
                 MelonLogger.Msg("NoClip disabled");
             }
         }
-
         private void FlyMovement(PlayerController playerController)
         {
             Rigidbody rb = playerController.GetComponent<Rigidbody>();
@@ -164,6 +180,53 @@ namespace EnhancedGodMode
                 : Vector3.zero;
 
             playerController.transform.position += movement * flySpeed * Time.deltaTime;
+        }
+
+        private void AttachTeleportationToPlayers()
+        {
+            var players = Repo_Lib.GetAllPlayers();
+            MelonLogger.Msg($"Found {players.Count()} players to attach Teleportation component to");
+
+            foreach (var player in players)
+            {
+                if (!player.GetComponent<Teleportation>())
+                {
+                    MelonLogger.Msg($"Adding Teleportation component to player: {player.name}");
+                    player.gameObject.AddComponent<Teleportation>();
+                }
+                else
+                {
+                    MelonLogger.Msg($"Player already has Teleportation component: {player.name}");
+                }
+            }
+        }
+    }
+
+    public class Teleportation : MonoBehaviourPun
+    {
+        [PunRPC]
+        public void Teleport(Vector3 targetPos)
+        {
+            MelonLogger.Msg("Received teleport request to: " + targetPos);
+            transform.position = targetPos;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.position = targetPos;
+                rb.velocity = Vector3.zero;
+            }
+            PlayerController pc = GetComponent<PlayerController>();
+            if (pc != null)
+            {
+                pc.transform.position = targetPos;
+                if (pc.rb != null)
+                {
+                    pc.rb.position = targetPos;
+                    pc.rb.velocity = Vector3.zero;
+                }
+            }
+
+            MelonLogger.Msg("Teleportation complete to: " + targetPos);
         }
     }
 }

@@ -1,11 +1,11 @@
 # FEATURES
 
 - Enable/Disable God Mode (f1)
-- Spawn large enemy valuable (f2)
-- Heal to full health (f3)
-- Disable durability on items (f5)
-- Enable/disable noClip v2 (f6)
-- buy all the items in shop (f7)
+- Enable/disable noClip v2 (f2)
+- Spawn large enemy valuable (f3)
+- Teleport to player(random if more than 2 people in game) (f4)
+- Heal to full health (f5)
+- toggle item durability(f6)
 - Upgrades strength,health,energy,jump,range 20 levels. Upgrades sprint speed, tumble launch 10 levels.
 
 ## Launch:
