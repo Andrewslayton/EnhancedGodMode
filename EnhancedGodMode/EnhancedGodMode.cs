@@ -43,29 +43,6 @@ namespace EnhancedGodMode
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.F4))
-            {
-                var pla  = Repo_Lib.GetAllPlayers();
-                for(int i = 0; i < pla.Count; i++)
-                {
-
-                    if (pla[i].GetComponent<PhotonView>().IsMine == true)
-                    {
-                        var t1 = Repo_Lib.GetPlayerController();
-                        MelonLogger.Msg("Player is mine");
-                        if (i != 0)
-                        {
-                            MelonLogger.Msg("Player moved to: " + pla[i - 1].transform.position);
-                            Repo_Lib.TeleportPlayer(t1, pla[i - 1].transform.position);
-                        }
-                        else
-                        {
-                            MelonLogger.Msg("Player moved to: " + pla[pla.Count - 1].transform.position);
-                            Repo_Lib.TeleportPlayer(t1, pla[pla.Count-1].transform.position);
-                        }
-                    }
-                }
-            }
             Repo_Lib.GetPlayerCollision().enabled = false;
             if (Repo_Lib.IsSprinting(playerController))
             {
@@ -95,12 +72,6 @@ namespace EnhancedGodMode
                     Repo_Lib.UpgradePlayerSprintSpeed();
                 }
             }
-
-            if (Input.GetKeyDown(KeyCode.F3))
-            {
-                Repo_Lib.SpawnItem(AssetManager.instance.enemyValuableBig);
-            }
-
             if (Input.GetKeyDown(KeyCode.F1))
             {
                 if (!god)
@@ -117,12 +88,60 @@ namespace EnhancedGodMode
                 }
             }
 
+            //noclip
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                ToggleNoClip(playerController);
+            }
+
+            if (isNoClip)
+            {
+                FlyMovement(playerController);
+            }
+
+
+            //item spawn 7k val
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                Repo_Lib.SpawnItem(AssetManager.instance.enemyValuableBig);
+            }
+
+
+            //tp closest (further testing- userbase :D)
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                var pla  = Repo_Lib.GetAllPlayers();
+                for(int i = 0; i < pla.Count; i++)
+                {
+
+                    if (pla[i].GetComponent<PhotonView>().IsMine == true)
+                    {
+                        var t1 = Repo_Lib.GetPlayerController();
+                        MelonLogger.Msg("Player is mine");
+                        if (i != 0)
+                        {
+                            MelonLogger.Msg("Player moved to: " + pla[i - 1].transform.position);
+                            Repo_Lib.TeleportPlayer(t1, pla[i - 1].transform.position);
+                        }
+                        else
+                        {
+                            MelonLogger.Msg("Player moved to: " + pla[pla.Count - 1].transform.position);
+                            Repo_Lib.TeleportPlayer(t1, pla[pla.Count-1].transform.position);
+                        }
+                    }
+                }
+            }
+
+
+            //heal player idk 
             if (Input.GetKeyDown(KeyCode.F5))
             {
                 PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
                 Repo_Lib.HealPlayerMax(playerAvatar.gameObject);
             }
 
+
+            //disable item durability
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 if (!durability)
@@ -139,14 +158,6 @@ namespace EnhancedGodMode
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
-            {
-                ToggleNoClip(playerController);
-            }
-            if (isNoClip)
-            {
-                FlyMovement(playerController);
-            }
         }
         private void ToggleNoClip(PlayerController playerController)
         {
@@ -206,6 +217,8 @@ namespace EnhancedGodMode
             playerController.transform.position += movement * flySpeed * Time.deltaTime;
         }
 
+
+        //stuff we prolly wont use again
         private void AttachTeleportationToPlayers()
         {
             var players = Repo_Lib.GetAllPlayers();
@@ -226,6 +239,7 @@ namespace EnhancedGodMode
         }
     }
 
+    //stuff we prolly wont use again
     public class Teleportation : MonoBehaviourPun
     {
         [PunRPC]
