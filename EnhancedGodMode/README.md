@@ -11,7 +11,7 @@
 
 ## Launch:
 
-- Install MelonLoader for R.E.P.O (click on the dependency and installer guide)
+- [Install MelonLoader for R.E.P.O (click on the dependency and installer guide)](https://github.com/LavaGang/MelonLoader.Installer?tab=readme-ov-file)
 - Download Repo Mod Library (dependency listed)
 - insert repomodlib.dll into the mods folder
 - insert EnhancedGodMode.dll into the Mods folder
@@ -20,3 +20,4 @@
 
 - Keep MelonLoader debug open on another screen to see current toggle states
 - Leave suggestions on the github.. We are open to new features
+- [join our discord for help on problems](https://discord.gg/Zwa7y7sK) 
