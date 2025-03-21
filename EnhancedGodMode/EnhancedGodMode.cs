@@ -21,10 +21,28 @@ namespace EnhancedGodMode
         private bool isNoClip = false;
         private float flySpeed = 10f;
         private bool durability = false;
+        private bool wasInGameLastFrame = false;
         public override void OnUpdate()
         {
-            if (!Repo_Lib.IsInGame()) return;
+            bool inGame = Repo_Lib.IsInGame();
+
+            if (inGame && !wasInGameLastFrame)
+            {
+                hasUpgraded = false;
+            }
+
+            wasInGameLastFrame = inGame;
+
+            if (!inGame)
+                return;
+
             PlayerController playerController = Repo_Lib.GetPlayerController();
+
+            if (playerController == null)
+            {
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 var pla  = Repo_Lib.GetAllPlayers();
@@ -52,11 +70,16 @@ namespace EnhancedGodMode
             if (Repo_Lib.IsSprinting(playerController))
             {
                 Repo_Lib.SetSprintEnergyDrain(playerController, 0f);
-                Repo_Lib.SetPlayerCurrentEnergy(playerController, Repo_Lib.GetPlayerMaxEnergy(playerController));
+                Repo_Lib.SetPlayerCurrentEnergy(
+                    playerController,
+                    Repo_Lib.GetPlayerMaxEnergy(playerController)
+                );
             }
+
             if (!hasUpgraded)
             {
                 hasUpgraded = true;
+
                 for (int i = 0; i < 20; i++)
                 {
                     Repo_Lib.UpgradePlayerEnergy();
@@ -65,6 +88,7 @@ namespace EnhancedGodMode
                     Repo_Lib.UpgradePlayerGrabRange();
                     Repo_Lib.UpgradePlayerGrabStrength();
                 }
+
                 for (int i = 0; i < 10; i++)
                 {
                     Repo_Lib.UpgradePlayerTumbleLaunch();
