@@ -6,7 +6,7 @@
 - Teleport to player(random if more than 2 people in game) (f4)
 - Heal to full health (f5)
 - toggle item durability(f6)
-- spam tumble with (f7)
+- Draw lines to current enemies (f7)
 - Upgrades strength,health,energy,jump,range 20 levels. Upgrades sprint speed, tumble launch 10 levels.
 
 ## Launch:
