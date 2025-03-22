@@ -222,10 +222,17 @@ namespace EnhancedGodMode
             float upDown = 0f;
             if (Input.GetKey(KeyCode.Space))
                 upDown = 1f;
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftControl))
                 upDown = -1f;
-            
+                
             bool isMoving = horizontal != 0f || vertical != 0f || upDown != 0f;
+
+            float currentFlySpeed = flySpeed;
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
+            {
+                currentFlySpeed += 15f;
+            }
+            else { currentFlySpeed = flySpeed; }
 
             Vector3 movement = isMoving
                 ? (playerController.transform.right * horizontal) +
@@ -233,7 +240,7 @@ namespace EnhancedGodMode
                   (playerController.transform.up * upDown)
                 : Vector3.zero;
 
-            playerController.transform.position += movement * flySpeed * Time.deltaTime;
+            playerController.transform.position += movement * currentFlySpeed * Time.deltaTime;
         }
 
 
