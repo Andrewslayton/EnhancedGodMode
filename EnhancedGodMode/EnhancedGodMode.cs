@@ -159,22 +159,10 @@ namespace EnhancedGodMode
                 }
             }
 
-            if(Input.GetKey(KeyCode.F7))
+            if (Input.GetKeyDown(KeyCode.F7))
             {
-                if (!isTumble)
-                {
-                    var t = Repo_Lib.GetPlayerAvatar().tumble;
-                    t.TumbleSet(true, true);
-                    PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
-                    playerAvatar.tumble.TumbleSet(true, true);
-                    isTumble = true;
-                }
-                else
-                {
-                    Repo_Lib.GetPlayerAvatar().tumble.TumbleSet(false, false);
-                    isTumble = false;
-                }
-
+                PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
+                Repo_Lib.DrawLineToEnemy();
             }
 
         }
@@ -241,56 +229,6 @@ namespace EnhancedGodMode
                 : Vector3.zero;
 
             playerController.transform.position += movement * currentFlySpeed * Time.deltaTime;
-        }
-
-
-        //stuff we prolly wont use again
-        private void AttachTeleportationToPlayers()
-        {
-            var players = Repo_Lib.GetAllPlayers();
-            MelonLogger.Msg($"Found {players.Count()} players to attach Teleportation component to");
-
-            foreach (var player in players)
-            {
-                if (!player.GetComponent<Teleportation>())
-                {
-                    MelonLogger.Msg($"Adding Teleportation component to player: {player.name}");
-                    player.gameObject.AddComponent<Teleportation>();
-                }
-                else
-                {
-                    MelonLogger.Msg($"Player already has Teleportation component: {player.name}");
-                }
-            }
-        }
-    }
-
-    //stuff we prolly wont use again
-    public class Teleportation : MonoBehaviourPun
-    {
-        [PunRPC]
-        public void Teleport(Vector3 targetPos)
-        {
-            MelonLogger.Msg("Received teleport request to: " + targetPos);
-            transform.position = targetPos;
-            Rigidbody rb = GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.position = targetPos;
-                rb.velocity = Vector3.zero;
-            }
-            PlayerController pc = GetComponent<PlayerController>();
-            if (pc != null)
-            {
-                pc.transform.position = targetPos;
-                if (pc.rb != null)
-                {
-                    pc.rb.position = targetPos;
-                    pc.rb.velocity = Vector3.zero;
-                }
-            }
-
-            MelonLogger.Msg("Teleportation complete to: " + targetPos);
         }
     }
 }
