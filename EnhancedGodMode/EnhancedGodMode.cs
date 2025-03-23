@@ -23,6 +23,7 @@ namespace EnhancedGodMode
         private bool isTumble = false;
         private bool durability = false;
         private bool wasInGameLastFrame = false;
+        bool lasersWOO = false;
         public override void OnUpdate()
         {
             bool inGame = Repo_Lib.IsInGame();
@@ -158,11 +159,22 @@ namespace EnhancedGodMode
                     durability = false;
                 }
             }
-
+            if (lasersWOO)
+            {
+                Repo_Lib.DrawLineToEnemy();
+            }
             if (Input.GetKeyDown(KeyCode.F7))
             {
-                PlayerAvatar playerAvatar = Repo_Lib.GetPlayerAvatar();
-                Repo_Lib.DrawLineToEnemy();
+                if (!lasersWOO)
+                {
+                    lasersWOO = true;
+                }
+                else
+                {
+                    lasersWOO = false;
+                    Repo_Lib.ClearEnemyLines();
+                }
+
             }
 
         }
